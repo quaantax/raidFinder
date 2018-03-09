@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "659971902233",
+    "firebase_url": "https://pokemon-raid-finder.firebaseio.com",
+    "project_id": "pokemon-raid-finder",
+    "storage_bucket": "pokemon-raid-finder.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:659971902233:android:0bb18811feadd96c",
+        "android_client_info": {
+          "package_name": "com.example.jordi.raidfinder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "659971902233-07pqn8q4i1v3d92mh78r0644csqm2m2e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.jordi.raidfinder",
+            "certificate_hash": "888da92c09943b1c75bdbe3620b8080793dfeb28"
+          }
+        },
+        {
+          "client_id": "659971902233-492etced0ekbru0r7gj4aceoas43phv9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBdCm20-KNlUN-KX95x6ivrf0hCmG8PFYk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "659971902233-492etced0ekbru0r7gj4aceoas43phv9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
