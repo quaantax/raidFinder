@@ -18,10 +18,16 @@ import com.google.firebase.auth.FirebaseUser;
 public class loginRegister extends AppCompatActivity {
     private EditText correoRegistro;
     private EditText passwordRegistro;
+    private EditText nombreRegistro;
+
+
     private Button botonRegistro;
     private FirebaseAuth mAuth;
+
     String email;
     String password;
+    int team;
+
     private static final String TAG = "MyActivity";
 
     @Override
@@ -31,8 +37,11 @@ public class loginRegister extends AppCompatActivity {
 
         correoRegistro=(EditText) findViewById(R.id.correoRegistro);
         passwordRegistro=(EditText) findViewById(R.id.passwordRegistro);
+        nombreRegistro=(EditText) findViewById(R.id.nombreRegistro);
         botonRegistro=(Button) findViewById(R.id.botonRegistro);
         mAuth = FirebaseAuth.getInstance();
+
+        android.widget.RadioGroup rGroup = (android.widget.RadioGroup)findViewById(R.id.radioGroup);
 
     }
 
@@ -61,5 +70,24 @@ public class loginRegister extends AppCompatActivity {
                         // ...
                     }
                 });
-    }
+            }
+            public void onRadioButtonClicked(View view) {
+                boolean checked = ((android.widget.RadioButton) view).isChecked();
+
+            // Check which radio button was clicked
+            switch(view.getId()) {
+                case R.id.valorButton:
+                    if (checked)
+                        team=1;
+                    break;
+                case R.id.mysticButton:
+                    if (checked)
+                        team=2;
+                    break;
+                case R.id.instinctButton:
+                    if (checked)
+                        team=3;
+                    break;
+                }
+        }
 }

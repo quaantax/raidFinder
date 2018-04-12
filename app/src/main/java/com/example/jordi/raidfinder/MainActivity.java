@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +24,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private EditText passwordLogin;
     private Button loginBoton;
     private TextView registerMainText;
+    private ImageView logo;
     private FirebaseAuth mAuth;
     private static final String TAG = "MyActivity";
 
@@ -39,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         passwordLogin=(EditText) findViewById(R.id.passwordLogin);
         registerMainText=(TextView) findViewById(R.id.registerMainText);
         loginBoton=(Button) findViewById(R.id.loginBoton);
+        logo=(ImageView) findViewById(R.id.logo);
 
         loginBoton.setOnClickListener(this);
 
