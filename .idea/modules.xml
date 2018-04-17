@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/raidFinder.iml" filepath="$PROJECT_DIR$/.idea/raidFinder.iml" />
       <module fileurl="file://$PROJECT_DIR$/raidFinder.iml" filepath="$PROJECT_DIR$/raidFinder.iml" />
     </modules>
   </component>
