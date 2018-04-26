@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "659971902233-jbg9jptl3le0j62dd27pamboikshvnpe.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.jordi.raidfinder",
+            "certificate_hash": "b378aba38b0529f58bc1f0f431651a3fbf5d8dc2"
+          }
+        },
+        {
           "client_id": "659971902233-07pqn8q4i1v3d92mh78r0644csqm2m2e.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

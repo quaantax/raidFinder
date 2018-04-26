@@ -1,5 +1,6 @@
 package com.example.jordi.raidfinder;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -51,6 +52,8 @@ public class    loginRegister extends AppCompatActivity {
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             //updateUI(user);
+                            Intent intent = new Intent(getApplicationContext(), MainMapActivity.class);
+                            startActivity(intent);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
@@ -63,4 +66,6 @@ public class    loginRegister extends AppCompatActivity {
                     }
                 });
     }
+
+
 }
