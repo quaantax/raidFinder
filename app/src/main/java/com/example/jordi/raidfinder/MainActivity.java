@@ -27,9 +27,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private FirebaseAuth mAuth;
     private static final String TAG = "MyActivity";
 
-    String email;
-    String password;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         passwordLogin=(EditText) findViewById(R.id.passwordLogin);
         registerMainText=(TextView) findViewById(R.id.registerMainText);
         loginBoton=(Button) findViewById(R.id.loginBoton);
+        loginBoton.setOnClickListener(this);
         logo=(ImageView) findViewById(R.id.logo);
 
         loginBoton.setOnClickListener(this);
@@ -58,42 +56,46 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     public void registrarUsuario(View view) {
-        /*Intent intent = new Intent(this, loginRegister.class);
-        startActivity(intent);*/
 
-        Intent intent = new Intent(this, MainMapActivity.class);
+        Intent intent = new Intent(this, userRegister.class);
         startActivity(intent);
     }
-    public void loginUsuario(View view){
-        email= String.valueOf(emailLogin.getText());
-        password=String.valueOf(passwordLogin.getText());
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            //updateUI(user);
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            Toast.makeText(MainActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                            //updateUI(null);
-                        }
-                        // ...
-                    }
-                });
-
-
-    }
-
-
 
     @Override
     public void onClick(View view) {
+        if (view.equals(loginBoton)) {
 
+            final String email= String.valueOf(emailLogin.getText());
+            final String password=String.valueOf(passwordLogin.getText());
+            if(email.isEmpty() || password.isEmpty()){
+                Toast.makeText(MainActivity.this, "La autenticación ha fallado",
+                        Toast.LENGTH_LONG).show();
+            } else {
+
+
+            mAuth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+
+                            if (task.isSuccessful()) {
+                                // Sign in success, update UI with the signed-in user's information
+                                Log.d(TAG, "signInWithEmail:success");
+                                FirebaseUser user = mAuth.getCurrentUser();
+                                //updateUI(user);
+                                Intent intent= new Intent(getApplicationContext(), MainMapActivity.class);
+                                startActivity(intent);
+                            } else {
+                                // If sign in fails, display a message to the user.
+                                Log.w(TAG, "signInWithEmail:failure", task.getException());
+                                Toast.makeText(MainActivity.this, "La autenticación ha fallado",
+                                        Toast.LENGTH_LONG).show();
+                                //updateUI(null);
+                            }
+                        }
+                    });
+            }//final del if que comprueba si el email o la contraseña estan vacios
+        }
     }
 }

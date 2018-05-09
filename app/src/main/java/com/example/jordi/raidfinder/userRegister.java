@@ -16,7 +16,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class    loginRegister extends AppCompatActivity {
+public class userRegister extends AppCompatActivity {
     private EditText correoRegistro;
     private EditText passwordRegistro;
     private Button botonRegistro;
