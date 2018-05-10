@@ -4,9 +4,11 @@ public class User {
 
     private String email;
     private String nombre;
-    private String password;
-    private String equipo;
-    int nivel;
+    private int equipo;
+    private int nivel;
+
+    public User() {
+    }
 
     public String getEmail() {
         return email;
@@ -24,19 +26,11 @@ public class User {
         this.nombre = nombre;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getEquipo() {
+    public int getEquipo() {
         return equipo;
     }
 
-    public void setEquipo(String equipo) {
+    public void setEquipo(int equipo) {
         this.equipo = equipo;
     }
 
@@ -48,5 +42,11 @@ public class User {
         this.nivel = nivel;
     }
 
+    public User(String email, String nombre, int equipo, int nivel) {
+        this.email = email;
+        this.nombre = nombre;
+        this.equipo = equipo;
+        this.nivel = nivel;
+    }
 
 }
