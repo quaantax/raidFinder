@@ -55,30 +55,54 @@ public class userRegister extends AppCompatActivity {
 
     public void registroUsuario(View view) {
 
-        mAuth.createUserWithEmailAndPassword(String.valueOf(correoRegistro.getText()), String.valueOf(passwordRegistro.getText()))
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "createUserWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            //updateUI(user);
-                            writeNewUser(user.getUid(),user);
-                            Intent intent = new Intent(getApplicationContext(), MainMapActivity.class);
-                            startActivity(intent);
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(getApplicationContext(), "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                            //updateUI(null);
-                        }
+        final String email= String.valueOf(correoRegistro.getText());
+        final String password= String.valueOf(passwordRegistro.getText());
+        final String nivel= String.valueOf(nivelRegistro.getText());
+//        final int nivel2= Integer.parseInt(nivel);
+        final String nombre= String.valueOf(nombreRegistro.getText());
 
-                        // ...
-                    }
-                });
-    }
+        if(nombre.isEmpty()){
+            Toast.makeText(this, "Nombre no introducido ", Toast.LENGTH_LONG).show();
+        } else if(email.isEmpty()){
+            Toast.makeText(this, "Correo no introducido", Toast.LENGTH_LONG).show();
+        } else if(password.isEmpty()){
+            Toast.makeText(this, "Contraseña no introducida", Toast.LENGTH_LONG).show();
+        } else if(password.length()<6) {
+            Toast.makeText(this, "La contraseña tiene que ser mayor", Toast.LENGTH_LONG).show();
+        } else if(nivel.isEmpty()){
+            Toast.makeText(this, "El nivel introducido es incorrecto", Toast.LENGTH_LONG).show();
+        } else if(Integer.parseInt(nivel)>40){
+            Toast.makeText(this, "El nivel debe ser menor que 40", Toast.LENGTH_LONG).show();
+        }
+            else {
+                mAuth.createUserWithEmailAndPassword(String.valueOf(correoRegistro.getText()), String.valueOf(passwordRegistro.getText()))
+                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    // Sign in success, update UI with the signed-in user's information
+                                    Log.d(TAG, "createUserWithEmail:success");
+                                    FirebaseUser user = mAuth.getCurrentUser();
+                                    //updateUI(user);
+                                    writeNewUser(user.getUid(),user);
+                                    Intent intent = new Intent(getApplicationContext(), MainMapActivity.class);
+                                    startActivity(intent);
+                                } else {
+                                    // If sign in fails, display a message to the user.
+                                    Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                                    Toast.makeText(getApplicationContext(), "Authentication failed.",
+                                            Toast.LENGTH_SHORT).show();
+                                    //updateUI(null);
+                                }
+
+                                // ...
+                            }
+                        });
+                }
+        }
+
+
+
 
     private void writeNewUser(String userId, FirebaseUser user) {
         mDatabase = FirebaseDatabase.getInstance().getReference();

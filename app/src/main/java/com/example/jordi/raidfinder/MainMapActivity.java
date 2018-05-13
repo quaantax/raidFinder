@@ -1,6 +1,7 @@
 package com.example.jordi.raidfinder;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -21,6 +22,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -144,6 +146,7 @@ public class MainMapActivity extends FragmentActivity implements OnMapReadyCallb
                 return;
             }
             mMap.setMyLocationEnabled(true);
+
         }
         final Bitmap bMap = BitmapFactory.decodeResource(getResources(), R.drawable.marker_icon);
 
@@ -154,11 +157,13 @@ public class MainMapActivity extends FragmentActivity implements OnMapReadyCallb
             public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
                 Log.d(TAG, "onChildAdded:" + dataSnapshot.getKey());
 
+                //Get firebase info for each gym
                float latitude= Float.parseFloat(dataSnapshot.child("latitude").getValue(String.class));
                float longitude=Float.parseFloat(dataSnapshot.child("longitude").getValue(String.class));
                String url=dataSnapshot.child("url").getValue(String.class);
                String name=dataSnapshot.child("name").getValue(String.class);
 
+               //Set custom marker with firebase info
                 LatLng newLocation= new LatLng(latitude,longitude);
                 mMap.addMarker(new MarkerOptions()
                         .position(newLocation)
@@ -167,9 +172,11 @@ public class MainMapActivity extends FragmentActivity implements OnMapReadyCallb
                 .icon(BitmapDescriptorFactory.fromBitmap(bMap)));
 
                 //Set Custom InfoWindow Adapter
-                CustomInfoWindowAdapter adapter = new CustomInfoWindowAdapter(MainMapActivity.this);
-                mMap.setInfoWindowAdapter(adapter);
+                /*CustomInfoWindowAdapter adapter = new CustomInfoWindowAdapter(MainMapActivity.this);
+                mMap.setInfoWindowAdapter(adapter);*/
             }
+
+
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String previousChildName) {
@@ -216,9 +223,25 @@ public class MainMapActivity extends FragmentActivity implements OnMapReadyCallb
 
         };
         ref.addChildEventListener(childEventListener);
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                String gymName=marker.getTitle();
+                String gymUrl=marker.getSnippet();
+
+                Intent intent= new Intent(getApplicationContext(),gymActivity.class);
+                intent.putExtra("gymName",gymName);
+                intent.putExtra("gymUrl",gymUrl);
+                startActivity(intent);
+
+
+                return true;
+            }
+        });
 
 
         }//onMapReady
+
 
         private void getLocationPermission(){
         String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION,
@@ -267,6 +290,11 @@ public class MainMapActivity extends FragmentActivity implements OnMapReadyCallb
         SupportMapFragment mapFragment= (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(MainMapActivity.this);
 
+    }
+
+    public void openGymActivity(){
+        Intent intent =new Intent(this,gymActivity.class);
+        startActivity(intent);
     }
 }
 

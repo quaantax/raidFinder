@@ -18,13 +18,11 @@
         android:layout_height="wrap_content"
         android:text="" />
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyleSmall"
+    <Button
+        android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"/>
+        android:text="Ver información"
+        />
+
 </LinearLayout>
