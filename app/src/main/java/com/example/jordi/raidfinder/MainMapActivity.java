@@ -43,10 +43,12 @@ public class MainMapActivity extends FragmentActivity implements OnMapReadyCallb
     private String TAG;
     private List<Gym> listGym;
 
+    private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
 
     private TextView userName;
 
+    private String gymId;
 
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
@@ -151,15 +153,17 @@ public class MainMapActivity extends FragmentActivity implements OnMapReadyCallb
         final Bitmap bMap = BitmapFactory.decodeResource(getResources(), R.drawable.marker_icon);
 
 
-        DatabaseReference ref= FirebaseDatabase.getInstance().getReference("gym");
+        final DatabaseReference ref= FirebaseDatabase.getInstance().getReference("gym");
         ChildEventListener childEventListener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
+                mDatabase = FirebaseDatabase.getInstance().getReference();
                 Log.d(TAG, "onChildAdded:" + dataSnapshot.getKey());
 
                 //Get firebase info for each gym
                float latitude= Float.parseFloat(dataSnapshot.child("latitude").getValue(String.class));
                float longitude=Float.parseFloat(dataSnapshot.child("longitude").getValue(String.class));
+               gymId = mDatabase.child("gym").push().getKey();
                String url=dataSnapshot.child("url").getValue(String.class);
                String name=dataSnapshot.child("name").getValue(String.class);
 
@@ -232,6 +236,7 @@ public class MainMapActivity extends FragmentActivity implements OnMapReadyCallb
                 Intent intent= new Intent(getApplicationContext(),gymActivity.class);
                 intent.putExtra("gymName",gymName);
                 intent.putExtra("gymUrl",gymUrl);
+                intent.putExtra("gymId",gymId);
                 startActivity(intent);
 
 

@@ -31,8 +31,11 @@ public class userRegister extends AppCompatActivity {
     private DatabaseReference mDatabase;
 
     private RadioGroup group;
-// ...
-
+    //vars
+    private String horaIncursion;
+    private int totalEquipo1;
+    private int totalEquipo2;
+    private int totalEquipo3;
 
     private static final String TAG = "MyActivity";
 

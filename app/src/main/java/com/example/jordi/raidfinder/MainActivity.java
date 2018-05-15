@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         loginBoton.setOnClickListener(this);
         logo=(ImageView) findViewById(R.id.logo);
 
-        loginBoton.setOnClickListener(this);
+
 
 
 
