@@ -161,19 +161,17 @@ public class MainMapActivity extends FragmentActivity implements OnMapReadyCallb
                 Log.d(TAG, "onChildAdded:" + dataSnapshot.getKey());
 
                 //Get firebase info for each gym
-               float latitude= Float.parseFloat(dataSnapshot.child("latitude").getValue(String.class));
-               float longitude=Float.parseFloat(dataSnapshot.child("longitude").getValue(String.class));
-               gymId = mDatabase.child("gym").push().getKey();
-               String url=dataSnapshot.child("url").getValue(String.class);
-               String name=dataSnapshot.child("name").getValue(String.class);
+                Gym gym=dataSnapshot.getValue(Gym.class);
+
 
                //Set custom marker with firebase info
-                LatLng newLocation= new LatLng(latitude,longitude);
-                mMap.addMarker(new MarkerOptions()
+                LatLng newLocation= new LatLng(Double.parseDouble(gym.getLatitude()),Double.parseDouble(gym.getLongitude()));
+                Marker marker= mMap.addMarker(new MarkerOptions()
                         .position(newLocation)
-                        .title(name)
-                        .snippet(url)
-                .icon(BitmapDescriptorFactory.fromBitmap(bMap)));
+                        .title(gym.getName())
+                        .snippet(gym.getUrl())
+                        .icon(BitmapDescriptorFactory.fromBitmap(bMap)));
+                marker.setTag(gym);
 
                 //Set Custom InfoWindow Adapter
                 /*CustomInfoWindowAdapter adapter = new CustomInfoWindowAdapter(MainMapActivity.this);
@@ -230,13 +228,15 @@ public class MainMapActivity extends FragmentActivity implements OnMapReadyCallb
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                String gymName=marker.getTitle();
-                String gymUrl=marker.getSnippet();
+                /*String gymName=marker.getTag();
+                String gymUrl=marker.getSnippet();*/
 
                 Intent intent= new Intent(getApplicationContext(),gymActivity.class);
-                intent.putExtra("gymName",gymName);
+                Gym gym=(Gym)marker.getTag();
+                intent.putExtra("gym",gym.objectToJson());
+                /*intent.putExtra("gymName",gymName);
                 intent.putExtra("gymUrl",gymUrl);
-                intent.putExtra("gymId",gymId);
+                intent.putExtra("gymId",gymId);*/
                 startActivity(intent);
 
 

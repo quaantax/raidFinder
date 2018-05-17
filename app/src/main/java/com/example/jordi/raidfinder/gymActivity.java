@@ -3,6 +3,7 @@ package com.example.jordi.raidfinder;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -34,6 +35,10 @@ public class gymActivity extends AppCompatActivity implements View.OnClickListen
     String gymUrl;
     String gymId;
 
+    Gym gym;
+
+    public static final int CODE_RAID=42;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,13 +62,19 @@ public class gymActivity extends AppCompatActivity implements View.OnClickListen
         setGymData();
     }
     public void setGymData(){
-        gymNameData=(String) bundle.get("gymName");
+ /*     gymNameData=(String) bundle.get("gymName");
         gymUrl=(String) bundle.get("gymUrl");
         gymId=(String) bundle.get("gymId");
 
+        gym=new Gym();
+        gym.setName(gymNameData);
+        gym.setUrl(gymUrl);
+        gym.setGym_id(gymId);*/
+        gym=new Gym();
+        gym=gym.JsonToObject(bundle.getString("gym"));
 
-        Picasso.get().load(gymUrl).into(gymImage);
-        gymNameText.setText(gymNameData);
+        Picasso.get().load(gym.getUrl()).into(gymImage);
+        gymNameText.setText(gym.getName());
 
         incursionButton.setVisibility(View.INVISIBLE);
 
@@ -74,16 +85,32 @@ public class gymActivity extends AppCompatActivity implements View.OnClickListen
     public void onClick(View view) {
 
             if (view.equals(crearIncursion)){
-                crearIncursion();
+                //crearIncursion();
 
                 incursionButton.setVisibility(View.VISIBLE);
+                Intent intent=new Intent(this,raidDataActivity.class);
+                startActivityForResult(intent,CODE_RAID);
+
+        }
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==CODE_RAID && resultCode==RESULT_OK){
+            Raid raid=new Raid();
+            raid=raid.JsonToObject(data.getStringExtra("Incursion"));
+            gym.setRaid(raid);
+            crearIncursion();
+
         }
     }
 
     public void crearIncursion(){
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        Raid raid=new Raid();
-        mDatabase.child("incursiones").child(gymId).setValue(raid);
+        mDatabase.child("gym").child("742").setValue(gym);
+        Log.d("gymAct",gym.getGym_id());
     }
 }
