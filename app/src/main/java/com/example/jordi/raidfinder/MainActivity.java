@@ -17,6 +17,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import org.json.JSONException;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     private EditText emailLogin;
@@ -26,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ImageView logo;
     private FirebaseAuth mAuth;
     private static final String TAG = "MyActivity";
+    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,10 +60,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    public void registrarUsuario(View view) {
+    public void registrarUsuario(View view) throws JSONException {
 
-        Intent intent = new Intent(this, userRegister.class);
-        startActivity(intent);
+        /*Intent intent = new Intent(this, userRegister.class);
+        startActivity(intent);*/
+        pushJson();
     }
 
     @Override
@@ -98,4 +104,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }//final del if que comprueba si el email o la contraseña estan vacios
         }
     }
-}
+    public String getGymJSON(){
+        return null;
+    }
+    public void pushJson(){
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        Gym gym = new Gym();
+            gym.setLatitude("39.466524");
+            gym.setLongitude("-0.455845");
+            gym.setName("Escultura A Paco El Perro Flaco");
+            gym.setUrl("http://lh3.ggpht.com/EdEi5QU-YXxgN4D4KPEvAB7SAiVUM7bE2qOq0UoO8dU4gE7E8lZjt4AHuk95eXzXxtozjhjZeNf1xIZyYK9ekw");
+            mDatabase.child("gym").push().setValue(gym);
+        }
+    }
+
