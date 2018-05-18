@@ -33,6 +33,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +43,8 @@ public class MainMapActivity extends FragmentActivity implements OnMapReadyCallb
     private GoogleMap mMap;
     private String TAG;
     private List<Gym> listGym;
+    private String userId;
+    private User user;
 
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
@@ -89,9 +92,13 @@ public class MainMapActivity extends FragmentActivity implements OnMapReadyCallb
         //updateUI(currentUser);
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
-            String uid = user.getUid();
+
+            userId = user.getUid();
+            getFirebaseUser();
+
+
             // Name, email address, and profile photo Url
-            String name = user.getDisplayName();
+            //String name = user.getDisplayName();
             String email = user.getEmail();
             //Uri photoUrl = user.getPhotoUrl();
 
@@ -101,8 +108,28 @@ public class MainMapActivity extends FragmentActivity implements OnMapReadyCallb
             // The user's ID, unique to the Firebase project. Do NOT use this value to
             // authenticate with your backend server, if you have one. Use
             // FirebaseUser.getToken() instead.
-            userName.setText(email);
+
         }
+    }
+    private void getFirebaseUser(){
+        ValueEventListener userListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Get Post object and use the values to update the UI
+                user=dataSnapshot.getValue(User.class);
+                userName.setText(user.getNombre());
+                // ...
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                // ...
+            }
+        };
+        DatabaseReference ref= FirebaseDatabase.getInstance().getReference().child("users").child(userId);
+        ref.addValueEventListener(userListener);
     }
 
     private void getDeviceLocation() {
