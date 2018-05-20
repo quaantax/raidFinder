@@ -27,14 +27,14 @@
         android:background="#FFFFFF">
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/userTeam"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="16dp"
-            android:src="@drawable/team_mystic"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="16dp" />
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:src="@drawable/team_mystic" />
 
     </RelativeLayout>
 
@@ -46,14 +46,13 @@
         android:layout_alignParentTop="true"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
         android:text="Nombre:"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toTopOf="@+id/userName"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="@+id/userName"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/userName"
-        app:layout_constraintTop_toTopOf="@+id/yourRelativeLayoutID"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toTopOf="@+id/yourRelativeLayoutID" />
 
     <TextView
         android:id="@+id/userName"
@@ -63,12 +62,40 @@
         android:layout_centerVertical="true"
         android:text="Usuario"
         android:textColor="#000000"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="@+id/yourRelativeLayoutID"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.077"
         app:layout_constraintStart_toStartOf="@+id/yourRelativeLayoutID"
-        app:layout_constraintTop_toTopOf="@+id/yourRelativeLayoutID"
-        app:layout_constraintVertical_bias="0.311" />
+        app:layout_constraintTop_toBottomOf="@+id/nameDefault"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/userDefaultNivel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="Nivel:"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="@+id/userName"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/userName"
+        app:layout_constraintTop_toBottomOf="@+id/userName" />
+
+    <TextView
+        android:id="@+id/userNivel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="@+id/userDefaultNivel"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/userDefaultNivel"
+        app:layout_constraintTop_toBottomOf="@+id/userDefaultNivel" />
 
 </android.support.constraint.ConstraintLayout>
 

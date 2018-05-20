@@ -61,7 +61,6 @@ public class userRegister extends AppCompatActivity {
         final String email= String.valueOf(correoRegistro.getText());
         final String password= String.valueOf(passwordRegistro.getText());
         final String nivel= String.valueOf(nivelRegistro.getText());
-//        final int nivel2= Integer.parseInt(nivel);
         final String nombre= String.valueOf(nombreRegistro.getText());
 
         if(nombre.isEmpty()){

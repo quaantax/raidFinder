@@ -7,7 +7,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -19,6 +21,8 @@ public class gymActivity extends AppCompatActivity implements View.OnClickListen
     private TextView gymNameText;
     private TextView gymDefaultTitle;
     private TextView totalPlayersTeam1;
+    private TextView totalPlayersTeam2;
+    private TextView totalPlayersTeam3;
     private ImageView gymImage;
     private ImageView ImageTeam1;
     private Button incursionButton;
@@ -26,14 +30,11 @@ public class gymActivity extends AppCompatActivity implements View.OnClickListen
 
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
+    private RelativeLayout linearLayout2;
 
 
     //import from intent
     Bundle bundle;
-
-    String gymNameData;
-    String gymUrl;
-    String gymId;
 
     Gym gym;
 
@@ -49,12 +50,15 @@ public class gymActivity extends AppCompatActivity implements View.OnClickListen
         gymImage=findViewById(R.id.gymImage);
         gymNameText=findViewById(R.id.gymName);
         incursionButton=findViewById(R.id.incursionButton);
-        gymDefaultTitle=findViewById(R.id.gymDefaultTitle);
         totalPlayersTeam1=findViewById(R.id.totalPlayersTeam1);
-        ImageTeam1=findViewById(R.id.ImageTeam1);
+        totalPlayersTeam2=findViewById(R.id.totalPlayersTeam2);
+        totalPlayersTeam3=findViewById(R.id.totalPlayersTeam3);
         crearIncursion=findViewById(R.id.crearIncursion);
 
+
         crearIncursion.setOnClickListener(this);
+        incursionButton.setOnClickListener(this);
+
 
         Intent intent=getIntent();
         bundle =intent.getExtras();
@@ -62,15 +66,7 @@ public class gymActivity extends AppCompatActivity implements View.OnClickListen
         setGymData();
     }
     public void setGymData(){
- /*     gymNameData=(String) bundle.get("gymName");
-        gymUrl=(String) bundle.get("gymUrl");
-        gymId=(String) bundle.get("gymId");
-
-        gym=new Gym();
-        gym.setName(gymNameData);
-        gym.setUrl(gymUrl);
-        gym.setGym_id(gymId);*/
-        gym=new Gym();
+        gym = new Gym();
         gym=gym.JsonToObject(bundle.getString("gym"));
 
         Picasso.get().load(gym.getUrl()).into(gymImage);
@@ -91,7 +87,14 @@ public class gymActivity extends AppCompatActivity implements View.OnClickListen
                 Intent intent=new Intent(this,raidDataActivity.class);
                 startActivityForResult(intent,CODE_RAID);
 
+                Toast.makeText(this, "gimnasio con la id "+gym.getGym_id(), Toast.LENGTH_LONG).show();
         }
+        if (view.equals(incursionButton)){
+                joinRaid();
+        }
+
+    }
+    public void joinRaid(){
 
     }
 
@@ -104,13 +107,14 @@ public class gymActivity extends AppCompatActivity implements View.OnClickListen
             gym.setRaid(raid);
             crearIncursion();
 
+
         }
     }
 
     public void crearIncursion(){
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        mDatabase.child("gym").child("742").setValue(gym);
+        mDatabase.child("gym").child(gym.getGym_id()).setValue(gym);
         Log.d("gymAct",gym.getGym_id());
     }
 }

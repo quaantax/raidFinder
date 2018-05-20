@@ -12,6 +12,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -50,6 +51,8 @@ public class MainMapActivity extends FragmentActivity implements OnMapReadyCallb
     private FirebaseAuth mAuth;
 
     private TextView userName;
+    private TextView userNivel;
+    private ImageView userTeam;
 
     private String gymId;
 
@@ -72,13 +75,14 @@ public class MainMapActivity extends FragmentActivity implements OnMapReadyCallb
         getLocationPermission();
         //se inicializa la instancia de Firebase
         mAuth = FirebaseAuth.getInstance();
-
         initMap();
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         /*SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);*/
         listGym = new ArrayList<>();
-        userName = (TextView) findViewById(R.id.userName);
+        userName = findViewById(R.id.userName);
+        userNivel = findViewById(R.id.userNivel);
+        userTeam = findViewById(R.id.userTeam);
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
@@ -115,9 +119,19 @@ public class MainMapActivity extends FragmentActivity implements OnMapReadyCallb
         ValueEventListener userListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+
                 // Get Post object and use the values to update the UI
                 user=dataSnapshot.getValue(User.class);
                 userName.setText(user.getNombre());
+                userNivel.setText(String.valueOf(user.getNivel()));
+                if (user.getEquipo()==1){
+                    userTeam.setImageDrawable(getResources().getDrawable(R.drawable.team_valor));
+                } else if (user.getEquipo()==2){
+                    userTeam.setImageDrawable(getResources().getDrawable(R.drawable.team_mystic));
+                } else {
+                    userTeam.setImageDrawable(getResources().getDrawable(R.drawable.team_valor));
+                }
+
                 // ...
             }
 
@@ -189,6 +203,7 @@ public class MainMapActivity extends FragmentActivity implements OnMapReadyCallb
 
                 //Get firebase info for each gym
                 Gym gym=dataSnapshot.getValue(Gym.class);
+                gym.setGym_id(dataSnapshot.getKey());
 
 
                //Set custom marker with firebase info

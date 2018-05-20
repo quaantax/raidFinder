@@ -34,7 +34,7 @@
         android:ems="10"
         android:hint="Usuario"
         android:inputType="textEmailAddress"
-        android:text="jordijedi@hotmail.com"
+        android:text="prueba5@gmail.com"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
