@@ -12,8 +12,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 public class gymActivity extends AppCompatActivity implements View.OnClickListener {
@@ -36,7 +40,8 @@ public class gymActivity extends AppCompatActivity implements View.OnClickListen
     //import from intent
     Bundle bundle;
 
-    Gym gym;
+    Gym gym= new Gym();
+    Raid raid;
 
     public static final int CODE_RAID=42;
 
@@ -58,22 +63,40 @@ public class gymActivity extends AppCompatActivity implements View.OnClickListen
 
         crearIncursion.setOnClickListener(this);
         incursionButton.setOnClickListener(this);
+        incursionButton.setVisibility(View.INVISIBLE);
 
 
         Intent intent=getIntent();
         bundle =intent.getExtras();
 
         setGymData();
+
     }
     public void setGymData(){
-        gym = new Gym();
         gym=gym.JsonToObject(bundle.getString("gym"));
 
         Picasso.get().load(gym.getUrl()).into(gymImage);
         gymNameText.setText(gym.getName());
 
-        incursionButton.setVisibility(View.INVISIBLE);
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference().child("gym").child(gym.getGym_id());
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if (snapshot.hasChild("raid")) {
+                    incursionButton.setVisibility(View.VISIBLE);
+                    crearIncursion.setVisibility(View.INVISIBLE);
+                    for (int i=0;i<=raid.getParticipantes().size(); i++){
+                        
+                    }
+                }
+            }
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
 
@@ -83,7 +106,7 @@ public class gymActivity extends AppCompatActivity implements View.OnClickListen
             if (view.equals(crearIncursion)){
                 //crearIncursion();
 
-                incursionButton.setVisibility(View.VISIBLE);
+
                 Intent intent=new Intent(this,raidDataActivity.class);
                 startActivityForResult(intent,CODE_RAID);
 
@@ -96,13 +119,37 @@ public class gymActivity extends AppCompatActivity implements View.OnClickListen
     }
     public void joinRaid(){
 
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference().child("gym").child(gym.getGym_id());
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        Raid raid=gym.getRaid();
+        raid.getParticipantes().add(mAuth.getCurrentUser().getUid());
+        gym.setRaid(raid);
+        mDatabase.child("gym").child(gym.getGym_id()).setValue(gym);
+
+        ValueEventListener postListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                // ...
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+
+                // ...
+            }
+        };
+        ref.addValueEventListener(postListener);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==CODE_RAID && resultCode==RESULT_OK){
-            Raid raid=new Raid();
+            raid=new Raid();
             raid=raid.JsonToObject(data.getStringExtra("Incursion"));
             gym.setRaid(raid);
             crearIncursion();
@@ -117,4 +164,5 @@ public class gymActivity extends AppCompatActivity implements View.OnClickListen
         mDatabase.child("gym").child(gym.getGym_id()).setValue(gym);
         Log.d("gymAct",gym.getGym_id());
     }
+
 }
