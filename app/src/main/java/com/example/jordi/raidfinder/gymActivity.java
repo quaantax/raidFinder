@@ -12,7 +12,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -42,6 +41,11 @@ public class gymActivity extends AppCompatActivity implements View.OnClickListen
 
     Gym gym= new Gym();
     Raid raid;
+
+    //vars
+    int totalPlayers1=0;
+    int totalPlayers2=0;
+    int totalPlayers3=0;
 
     public static final int CODE_RAID=42;
 
@@ -78,6 +82,7 @@ public class gymActivity extends AppCompatActivity implements View.OnClickListen
         Picasso.get().load(gym.getUrl()).into(gymImage);
         gymNameText.setText(gym.getName());
 
+
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference().child("gym").child(gym.getGym_id());
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -86,9 +91,7 @@ public class gymActivity extends AppCompatActivity implements View.OnClickListen
                 if (snapshot.hasChild("raid")) {
                     incursionButton.setVisibility(View.VISIBLE);
                     crearIncursion.setVisibility(View.INVISIBLE);
-                    for (int i=0;i<=raid.getParticipantes().size(); i++){
-                        
-                    }
+                    filterPlayersTeam();
                 }
             }
 
@@ -97,6 +100,39 @@ public class gymActivity extends AppCompatActivity implements View.OnClickListen
 
             }
         });
+    }
+    public void filterPlayersTeam() {
+        String raidParticipante = "";
+        raid = gym.getRaid();
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        for (int i = 0; i <= raid.getParticipantes().size(); i++) {
+            raidParticipante = raid.getParticipantes().get(i);
+            DatabaseReference ref = database.getReference().child("users").child(raidParticipante);
+            ValueEventListener postListener = new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    User user = dataSnapshot.getValue(User.class);
+                    if (user.getEquipo() == 1) {
+                        totalPlayers1++;
+                    } else if (user.getEquipo() == 2) {
+                        totalPlayers2++;
+                    } else if (user.getEquipo() == 3) {
+                        totalPlayers3++;
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    // Getting Post failed, log a message
+                }
+            };
+            ref.addValueEventListener(postListener);
+
+
+            totalPlayersTeam1.setText(""+totalPlayers1);
+            totalPlayersTeam2.setText(""+totalPlayers2);
+            totalPlayersTeam3.setText(""+totalPlayers3);
+        }
     }
 
 
@@ -131,15 +167,11 @@ public class gymActivity extends AppCompatActivity implements View.OnClickListen
         ValueEventListener postListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
-                // ...
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 // Getting Post failed, log a message
-
-                // ...
             }
         };
         ref.addValueEventListener(postListener);
@@ -153,8 +185,6 @@ public class gymActivity extends AppCompatActivity implements View.OnClickListen
             raid=raid.JsonToObject(data.getStringExtra("Incursion"));
             gym.setRaid(raid);
             crearIncursion();
-
-
         }
     }
 
