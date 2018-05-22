@@ -56,7 +56,6 @@ public class raidDataActivity extends AppCompatActivity {
     public void crearIncursion(){
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-
         Intent intent=new Intent();
         Raid raid= new Raid();
         raid.setHora(timeRaid.getText().toString());
