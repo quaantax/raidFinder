@@ -75,6 +75,7 @@ public class gymActivity extends AppCompatActivity implements View.OnClickListen
 
         setGymData();
 
+
     }
     public void setGymData(){
         gym=gym.JsonToObject(bundle.getString("gym"));
@@ -91,7 +92,7 @@ public class gymActivity extends AppCompatActivity implements View.OnClickListen
                 if (snapshot.hasChild("raid")) {
                     incursionButton.setVisibility(View.VISIBLE);
                     crearIncursion.setVisibility(View.INVISIBLE);
-
+                    filterPlayersTeam();
                 }
             }
 
@@ -102,38 +103,38 @@ public class gymActivity extends AppCompatActivity implements View.OnClickListen
         });
     }
     public void filterPlayersTeam() {
-        String raidParticipante = "";
+        String raidParticipante;
         raid=gym.getRaid();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        for (int i = 0; i <= raid.getParticipantes().size(); i++) {
+        for (int i = 0; i <raid.getParticipantes().size(); i++) {
             raidParticipante = raid.getParticipantes().get(i);
-            DatabaseReference ref = database.getReference().child("users").child(raidParticipante).child("equipo");
-            ValueEventListener postListener = new ValueEventListener() {
+            mDatabase.child("users").child(raidParticipante).child("equipo").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    User user=dataSnapshot.getValue(User.class);
-                    if (user.getEquipo()==1){
+
+                    if (Integer.parseInt(String.valueOf(dataSnapshot.getValue()))==1){
                         totalPlayers1++;
-                    } else if (user.getEquipo()==2){
+                    }
+                    else if (Integer.parseInt(String.valueOf(dataSnapshot.getValue()))==2) {
                         totalPlayers2++;
-                    } else if (user.getEquipo()==3){
+                    }
+                    else if (Integer.parseInt(String.valueOf(dataSnapshot.getValue()))==3) {
                         totalPlayers3++;
                     }
+
                 }
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-                    // Getting Post failed, log a message
 
                 }
-            };
-            ref.addValueEventListener(postListener);
-            }
-
-
+            });
             totalPlayersTeam1.setText(String.valueOf(totalPlayers1));
             totalPlayersTeam2.setText(String.valueOf(totalPlayers2));
             totalPlayersTeam3.setText(String.valueOf(totalPlayers3));
+            }
+
 
     }
 
@@ -151,8 +152,8 @@ public class gymActivity extends AppCompatActivity implements View.OnClickListen
                 Toast.makeText(this, "gimnasio con la id "+gym.getGym_id(), Toast.LENGTH_LONG).show();
         }
         if (view.equals(incursionButton)){
-                //joinRaid();
-                filterPlayersTeam();
+                joinRaid();
+                //filterPlayersTeam();
         }
 
     }
