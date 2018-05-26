@@ -47,6 +47,7 @@ public class raidDataActivity extends AppCompatActivity {
         ArrayList<String> pokemon= new ArrayList<>();
         pokemon.add("Latios");
         pokemon.add("Latias");
+        pokemon.add("Ho-Oh");
 
         ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, pokemon);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -56,7 +57,7 @@ public class raidDataActivity extends AppCompatActivity {
     public void crearIncursion(){
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        Intent intent=new Intent();
+        Intent intent=new Intent(this,ParticipantesIncursionActivity.class);
         Raid raid= new Raid();
         raid.setHora(timeRaid.getText().toString());
         raid.setPokemon(spinner.getSelectedItem().toString());

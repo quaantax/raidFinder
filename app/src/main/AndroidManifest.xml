@@ -37,7 +37,8 @@
             android:name=".MainMapActivity"
             android:label="@string/title_activity_main_map" />
         <activity android:name=".gymActivity" />
-        <activity android:name=".raidDataActivity"></activity>
+        <activity android:name=".raidDataActivity" />
+        <activity android:name=".ParticipantesIncursionActivity"></activity>
     </application>
 
 </manifest>

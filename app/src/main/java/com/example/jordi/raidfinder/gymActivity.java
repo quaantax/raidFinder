@@ -7,7 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,14 +26,20 @@ public class gymActivity extends AppCompatActivity implements View.OnClickListen
     private TextView totalPlayersTeam1;
     private TextView totalPlayersTeam2;
     private TextView totalPlayersTeam3;
+    private TextView raidHora;
+    private TextView raidHoraDefault;
+    private TextView pokemonRaidDefault;
+    private TextView pokemonRaid;
     private ImageView gymImage;
-    private ImageView ImageTeam1;
+    private ImageView raidPokemonImage;
     private Button incursionButton;
     private Button crearIncursion;
+    private Button raidParticipantesButton;
+
 
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
-    private RelativeLayout linearLayout2;
+    private LinearLayout linearLayout2;
 
 
     //import from intent
@@ -63,11 +69,28 @@ public class gymActivity extends AppCompatActivity implements View.OnClickListen
         totalPlayersTeam2=findViewById(R.id.totalPlayersTeam2);
         totalPlayersTeam3=findViewById(R.id.totalPlayersTeam3);
         crearIncursion=findViewById(R.id.crearIncursion);
+        raidHora=findViewById(R.id.raidHora);
+        raidHoraDefault=findViewById(R.id.raidHoraDefault);
+        raidPokemonImage=findViewById(R.id.raidPokemonImage);
+        linearLayout2=findViewById(R.id.linearLayout2);
+        raidParticipantesButton=findViewById(R.id.raidParticipantesButton);
+        pokemonRaidDefault=findViewById(R.id.pokemonRaidDefault);
+        pokemonRaid=findViewById(R.id.pokemonRaid);
 
 
         crearIncursion.setOnClickListener(this);
         incursionButton.setOnClickListener(this);
+        raidParticipantesButton.setOnClickListener(this);
+
         incursionButton.setVisibility(View.INVISIBLE);
+        raidPokemonImage.setVisibility(View.INVISIBLE);
+        raidHoraDefault.setVisibility(View.INVISIBLE);
+        raidHora.setVisibility(View.INVISIBLE);
+        linearLayout2.setVisibility(View.INVISIBLE);
+        pokemonRaidDefault.setVisibility(View.INVISIBLE);
+        pokemonRaid.setVisibility(View.INVISIBLE);
+        raidParticipantesButton.setVisibility(View.INVISIBLE);
+
 
 
         Intent intent=getIntent();
@@ -83,16 +106,33 @@ public class gymActivity extends AppCompatActivity implements View.OnClickListen
         Picasso.get().load(gym.getUrl()).into(gymImage);
         gymNameText.setText(gym.getName());
 
-
+        raid=gym.getRaid();
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference().child("gym").child(gym.getGym_id());
+
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
+
                 if (snapshot.hasChild("raid")) {
+                    final int id = getResources().getIdentifier("com.example.jordi.raidfinder:drawable/" + raid.getPokemon().toLowerCase(), null, null);
+                    linearLayout2.setVisibility(View.VISIBLE);
                     incursionButton.setVisibility(View.VISIBLE);
                     crearIncursion.setVisibility(View.INVISIBLE);
+                    raidHora.setVisibility(View.VISIBLE);
+                    raidHoraDefault.setVisibility(View.VISIBLE);
+                    raidHora.setText(String.valueOf(raid.getHora()));
+                    raidPokemonImage.setVisibility(View.VISIBLE);
+                    raidPokemonImage.setImageResource(id);
+                    pokemonRaidDefault.setVisibility(View.VISIBLE);
+                    pokemonRaid.setVisibility(View.VISIBLE);
+                    pokemonRaid.setText(raid.getPokemon());
+                    raidParticipantesButton.setVisibility(View.VISIBLE);
                     filterPlayersTeam();
+
+                    if (raid.getParticipantes().contains(mAuth.getCurrentUser().getUid())){
+                        incursionButton.setVisibility(View.INVISIBLE);
+                    }
                 }
             }
 
@@ -122,7 +162,9 @@ public class gymActivity extends AppCompatActivity implements View.OnClickListen
                     else if (Integer.parseInt(String.valueOf(dataSnapshot.getValue()))==3) {
                         totalPlayers3++;
                     }
-
+                    totalPlayersTeam1.setText(String.valueOf(totalPlayers1));
+                    totalPlayersTeam2.setText(String.valueOf(totalPlayers2));
+                    totalPlayersTeam3.setText(String.valueOf(totalPlayers3));
                 }
 
                 @Override
@@ -130,9 +172,7 @@ public class gymActivity extends AppCompatActivity implements View.OnClickListen
 
                 }
             });
-            totalPlayersTeam1.setText(String.valueOf(totalPlayers1));
-            totalPlayersTeam2.setText(String.valueOf(totalPlayers2));
-            totalPlayersTeam3.setText(String.valueOf(totalPlayers3));
+
             }
 
 
@@ -141,44 +181,54 @@ public class gymActivity extends AppCompatActivity implements View.OnClickListen
 
     @Override
     public void onClick(View view) {
-
-            if (view.equals(crearIncursion)){
-                //crearIncursion();
-
-
-                Intent intent=new Intent(this,raidDataActivity.class);
-                startActivityForResult(intent,CODE_RAID);
-
-                Toast.makeText(this, "gimnasio con la id "+gym.getGym_id(), Toast.LENGTH_LONG).show();
+        raid=gym.getRaid();
+        if (view.equals(crearIncursion)){
+            Intent intent=new Intent(this,raidDataActivity.class);
+            startActivityForResult(intent,CODE_RAID);
+            Toast.makeText(this, "gimnasio con la id "+gym.getGym_id(), Toast.LENGTH_LONG).show();
         }
         if (view.equals(incursionButton)){
-                joinRaid();
-                //filterPlayersTeam();
+            joinRaid();
+        }
+        if (view.equals(raidParticipantesButton)){
+            Intent intent=new Intent(this,ParticipantesIncursionActivity.class);
+            intent.putExtra("raid",raid.objectToJson());
+            startActivity(intent);
         }
 
     }
     public void joinRaid(){
+        String raidParticipante;
+        raid=gym.getRaid();
+        raid.getParticipantes().add(mAuth.getCurrentUser().getUid());
 
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference().child("gym").child(gym.getGym_id());
 
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        raid=gym.getRaid();
-        raid.getParticipantes().add(mAuth.getCurrentUser().getUid());
-        gym.setRaid(raid);
-        mDatabase.child("gym").child(gym.getGym_id()).setValue(gym);
+        //check if user already joined the raid
+        if (raid.getParticipantes().contains(mAuth.getCurrentUser().getUid())){
+            Toast.makeText(this, "Ya estás inscrito", Toast.LENGTH_LONG).show();
+            incursionButton.setVisibility(View.INVISIBLE);
+        } else {
+            mDatabase = FirebaseDatabase.getInstance().getReference();
+            raid=gym.getRaid();
 
-        ValueEventListener postListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-            }
+            gym.setRaid(raid);
+            mDatabase.child("gym").child(gym.getGym_id()).setValue(gym);
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Getting Post failed, log a message
-            }
-        };
-        ref.addValueEventListener(postListener);
+            ValueEventListener postListener = new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    // Getting Post failed, log a message
+                }
+            };
+            ref.addValueEventListener(postListener);
+        }
+
     }
 
     @Override
@@ -198,5 +248,4 @@ public class gymActivity extends AppCompatActivity implements View.OnClickListen
         mDatabase.child("gym").child(gym.getGym_id()).setValue(gym);
         Log.d("gymAct",gym.getGym_id());
     }
-
 }
