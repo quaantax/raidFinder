@@ -41,12 +41,21 @@
         android:id="@+id/aceptarRaidButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Aceptar" />
+        android:text="Aceptar"
+        android:background="@drawable/button"
+        android:textColor="#ffffff"/>
+
+    <View
+        android:id="@+id/view4"
+        android:layout_width="match_parent"
+        android:layout_height="4px" />
 
     <Button
         android:id="@+id/cancelarRaidButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Cancelar" />
+        android:background="@drawable/button"
+        android:text="Cancelar"
+        android:textColor="#ffffff" />
 
 </LinearLayout>

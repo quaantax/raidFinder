@@ -35,6 +35,7 @@ public class gymActivity extends AppCompatActivity implements View.OnClickListen
     private Button incursionButton;
     private Button crearIncursion;
     private Button raidParticipantesButton;
+    private Button raidChat;
 
 
     private DatabaseReference mDatabase;
@@ -76,11 +77,13 @@ public class gymActivity extends AppCompatActivity implements View.OnClickListen
         raidParticipantesButton=findViewById(R.id.raidParticipantesButton);
         pokemonRaidDefault=findViewById(R.id.pokemonRaidDefault);
         pokemonRaid=findViewById(R.id.pokemonRaid);
+        raidChat=findViewById(R.id.chatRaid);
 
 
         crearIncursion.setOnClickListener(this);
         incursionButton.setOnClickListener(this);
         raidParticipantesButton.setOnClickListener(this);
+        raidChat.setOnClickListener(this);
 
         incursionButton.setVisibility(View.INVISIBLE);
         raidPokemonImage.setVisibility(View.INVISIBLE);
@@ -193,6 +196,11 @@ public class gymActivity extends AppCompatActivity implements View.OnClickListen
         if (view.equals(raidParticipantesButton)){
             Intent intent=new Intent(this,ParticipantesIncursionActivity.class);
             intent.putExtra("raid",raid.objectToJson());
+            startActivity(intent);
+        }
+        if(view.equals(raidChat)){
+            Intent intent=new Intent(this,ChatActivity.class);
+            intent.putExtra("gymid",gym.getGym_id());
             startActivity(intent);
         }
 

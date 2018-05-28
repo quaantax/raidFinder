@@ -43,7 +43,9 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/passwordRegistro"
         app:layout_constraintHorizontal_bias="0.495"
-        app:layout_constraintStart_toStartOf="@+id/passwordRegistro" />
+        app:layout_constraintStart_toStartOf="@+id/passwordRegistro"
+        android:background="@drawable/button"
+        android:textColor="#ffffff"/>
 
     <RadioGroup
         android:id="@+id/radioGroup"

@@ -181,6 +181,7 @@ public class MainMapActivity extends FragmentActivity implements OnMapReadyCallb
 
         }
         final Bitmap bMap = BitmapFactory.decodeResource(getResources(), R.drawable.marker_icon);
+        final Bitmap bMapRaid = BitmapFactory.decodeResource(getResources(), R.drawable.marker_icon_raid);
 
 
         final DatabaseReference ref= FirebaseDatabase.getInstance().getReference("gym");
@@ -197,12 +198,22 @@ public class MainMapActivity extends FragmentActivity implements OnMapReadyCallb
 
                //Set custom marker with firebase info
                 LatLng newLocation= new LatLng(Double.parseDouble(gym.getLatitude()),Double.parseDouble(gym.getLongitude()));
-                Marker marker= mMap.addMarker(new MarkerOptions()
-                        .position(newLocation)
-                        .title(gym.getName())
-                        .snippet(gym.getUrl())
-                        .icon(BitmapDescriptorFactory.fromBitmap(bMap)));
-                marker.setTag(gym);
+                if (dataSnapshot.hasChild("raid")){
+                    Marker marker= mMap.addMarker(new MarkerOptions()
+                            .position(newLocation)
+                            .title(gym.getName())
+                            .snippet(gym.getUrl())
+                            .icon(BitmapDescriptorFactory.fromBitmap(bMapRaid)));
+                    marker.setTag(gym);
+                } else {
+                    Marker marker= mMap.addMarker(new MarkerOptions()
+                            .position(newLocation)
+                            .title(gym.getName())
+                            .snippet(gym.getUrl())
+                            .icon(BitmapDescriptorFactory.fromBitmap(bMap)));
+                    marker.setTag(gym);
+                }
+
 
                 //Set Custom InfoWindow Adapter
                 /*CustomInfoWindowAdapter adapter = new CustomInfoWindowAdapter(MainMapActivity.this);
