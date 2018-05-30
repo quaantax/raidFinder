@@ -93,6 +93,7 @@ public class gymActivity extends AppCompatActivity implements View.OnClickListen
         pokemonRaidDefault.setVisibility(View.INVISIBLE);
         pokemonRaid.setVisibility(View.INVISIBLE);
         raidParticipantesButton.setVisibility(View.INVISIBLE);
+        raidChat.setVisibility(View.INVISIBLE);
 
 
 
@@ -135,6 +136,7 @@ public class gymActivity extends AppCompatActivity implements View.OnClickListen
 
                     if (raid.getParticipantes().contains(mAuth.getCurrentUser().getUid())){
                         incursionButton.setVisibility(View.INVISIBLE);
+                        raidChat.setVisibility(View.VISIBLE);
                     }
                 }
             }

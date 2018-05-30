@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".gymActivity">
+    tools:context=".gymActivity"
+    android:background="@color/background">
 
     <ImageView
         android:id="@+id/gymImage"
@@ -50,7 +51,7 @@
         app:layout_constraintEnd_toEndOf="@+id/gymImage"
         app:layout_constraintStart_toStartOf="@+id/gymImage"
         app:layout_constraintTop_toBottomOf="@+id/gymImage"
-        tools:textColor="#000000" />
+        tools:textColor="@color/editTextBackground" />
 
 
     <View
@@ -86,7 +87,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
         android:text="Gimnasio"
-        android:textColor="#000000"
+        android:textColor="#ffffff"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -183,7 +184,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="0"
-                android:textColor="#000000"
+                android:textColor="@color/editTextBackground"
                 android:textSize="22sp"
                 tools:layout_editor_absoluteX="0dp"
                 tools:layout_editor_absoluteY="619dp" />
@@ -195,7 +196,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="0"
-                android:textColor="#000000"
+                android:textColor="@color/editTextBackground"
                 android:textSize="22sp" />
 
             <TextView
@@ -205,7 +206,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="0"
-                android:textColor="#000000"
+                android:textColor="@color/editTextBackground"
                 android:textSize="22sp" />
         </LinearLayout>
 
@@ -219,6 +220,7 @@
         android:layout_marginStart="28dp"
         android:layout_marginTop="8dp"
         android:text="Hora"
+        android:textColor="#aeaeaf"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view" />
 
@@ -240,7 +242,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="00:00"
-        android:textColor="#000000"
+        android:textColor="#ffffff"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="@+id/raidHoraDefault"
         app:layout_constraintHorizontal_bias="0.0"
@@ -268,6 +270,7 @@
         android:layout_marginLeft="72dp"
         android:layout_marginStart="72dp"
         android:text="Pokemon"
+        android:textColor="#aeaeaf"
         app:layout_constraintBottom_toBottomOf="@+id/raidHoraDefault"
         app:layout_constraintStart_toEndOf="@+id/raidHoraDefault"
         app:layout_constraintTop_toTopOf="@+id/raidHoraDefault"
@@ -278,7 +281,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Pokemon"
-        android:textColor="#000000"
+        android:textColor="#ffffff"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="@+id/pokemonRaidDefault"
         app:layout_constraintHorizontal_bias="0.0"

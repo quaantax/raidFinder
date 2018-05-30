@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ParticipantesIncursionActivity">
+    tools:context=".ParticipantesIncursionActivity"
+    android:background="@color/background">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/your_recycler_view"

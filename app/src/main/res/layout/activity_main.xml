@@ -5,13 +5,14 @@
     android:id="@+id/backg"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.jordi.raidfinder.MainActivity">
+    tools:context="com.example.jordi.raidfinder.MainActivity"
+    android:background="@color/background">
 
     <RelativeLayout
         android:id="@+id/background"
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:background="@drawable/background" >
+        android:background="@drawable/background">
 
         <ImageView
             android:id="@+id/logo"
@@ -31,12 +32,13 @@
         android:layout_marginEnd="6dp"
         android:layout_marginRight="6dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="20dp"
         android:ems="10"
         android:hint="Usuario"
         android:inputType="textEmailAddress"
-        android:text="prueba5@gmail.com"
+        android:textColor="@color/editTextBackground"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/background" />
 
@@ -51,7 +53,8 @@
         android:text="tameformacion"
         app:layout_constraintEnd_toEndOf="@+id/emailLogin"
         app:layout_constraintStart_toStartOf="@+id/emailLogin"
-        app:layout_constraintTop_toBottomOf="@+id/emailLogin" />
+        app:layout_constraintTop_toBottomOf="@+id/emailLogin"
+        android:textColor="@color/editTextBackground"/>
 
     <Button
         android:id="@+id/loginBoton"
@@ -61,17 +64,16 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:background="@drawable/button"
         android:text="Enviar"
+        android:textColor="#ffffff"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/passwordLogin"
         app:layout_constraintHorizontal_bias="0.495"
-        app:layout_constraintStart_toStartOf="@+id/passwordLogin"
-        app:layout_constraintTop_toBottomOf="@+id/passwordLogin"
-        app:layout_constraintVertical_bias="0.116"
-        android:background="@drawable/button"
-        android:textColor="#ffffff"
 
-        />
+        app:layout_constraintStart_toStartOf="@+id/passwordLogin"
+        app:layout_constraintTop_toBottomOf="@+id/checkBox"
+        app:layout_constraintVertical_bias="0.045" />
 
     <TextView
         android:id="@+id/registerMainText"
@@ -79,10 +81,22 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
+        android:textColor="@color/editTextBackground"
         android:text="¿Aún no te has registrado? Pulsa aquí"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/loginBoton"
         app:layout_constraintStart_toStartOf="@+id/loginBoton"
         app:layout_constraintTop_toBottomOf="@+id/loginBoton"
         android:onClick="registrarUsuario"/>
+
+    <CheckBox
+        android:id="@+id/checkBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Recordarme"
+        app:layout_constraintEnd_toEndOf="@+id/passwordLogin"
+        app:layout_constraintStart_toStartOf="@+id/passwordLogin"
+        app:layout_constraintTop_toBottomOf="@+id/passwordLogin"
+        android:textColor="#ffffff"/>
 </android.support.constraint.ConstraintLayout>

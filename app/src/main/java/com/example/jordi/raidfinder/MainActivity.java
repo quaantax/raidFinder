@@ -1,12 +1,16 @@
 package com.example.jordi.raidfinder;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -30,6 +34,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private FirebaseAuth mAuth;
     private static final String TAG = "MyActivity";
     private DatabaseReference mDatabase;
+    private CheckBox saveLoginCheckBox;
+    private SharedPreferences loginPreferences;
+    private SharedPreferences.Editor loginPrefsEditor;
+    private Boolean saveLogin;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,14 +46,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         mAuth = FirebaseAuth.getInstance();
 
-        emailLogin = (EditText) findViewById(R.id.emailLogin);
-        passwordLogin = (EditText) findViewById(R.id.passwordLogin);
-        registerMainText = (TextView) findViewById(R.id.registerMainText);
-        loginBoton = (Button) findViewById(R.id.loginBoton);
+        emailLogin = findViewById(R.id.emailLogin);
+        passwordLogin = findViewById(R.id.passwordLogin);
+        registerMainText = findViewById(R.id.registerMainText);
+        loginBoton = findViewById(R.id.loginBoton);
         loginBoton.setOnClickListener(this);
-        logo = (ImageView) findViewById(R.id.logo);
+        logo = findViewById(R.id.logo);
+        saveLoginCheckBox = findViewById(R.id.checkBox);
+
+        saveLogin = loginPreferences.getBoolean("saveLogin", false);
+        loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
+        loginPrefsEditor = loginPreferences.edit();
 
 
+
+        if (saveLogin == true) {
+            emailLogin.setText(loginPreferences.getString("username", ""));
+            passwordLogin.setText(loginPreferences.getString("password", ""));
+            saveLoginCheckBox.setChecked(true);
+        }
     }
 
     @Override
@@ -66,6 +86,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View view) {
         if (view.equals(loginBoton)) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(emailLogin.getWindowToken(), 0);
+
+            if (saveLoginCheckBox.isChecked()) {
+                loginPrefsEditor.putBoolean("saveLogin", true);
+                loginPrefsEditor.putString("username", emailLogin.getText().toString());
+                loginPrefsEditor.putString("password",  passwordLogin.getText().toString());
+                loginPrefsEditor.commit();
+            } else {
+                loginPrefsEditor.clear();
+                loginPrefsEditor.commit();
+            }
+
+
 
             final String email = String.valueOf(emailLogin.getText());
             final String password = String.valueOf(passwordLogin.getText());
@@ -88,6 +122,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     //updateUI(user);
                                     Intent intent = new Intent(getApplicationContext(), MainMapActivity.class);
                                     startActivity(intent);
+                                    finish();
                                 } else {
                                     // If sign in fails, display a message to the user.
                                     Log.w(TAG, "signInWithEmail:failure", task.getException());
@@ -97,9 +132,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 }
                             }
                         });
-            }//final del if que comprueba si el email o la contraseña estan vacios
-        }
+                }//final del if que comprueba si el email o la contraseña estan vacios
+            }
+    }
     }
 
-}
+
+
 
