@@ -87,8 +87,7 @@ public class userRegister extends AppCompatActivity {
                                     FirebaseUser user = mAuth.getCurrentUser();
                                     //updateUI(user);
                                     writeNewUser(user.getUid(),user);
-                                    Intent intent = new Intent(getApplicationContext(), MainMapActivity.class);
-                                    startActivity(intent);
+                                    sendVerificationEmail();
                                 } else {
                                     // If sign in fails, display a message to the user.
                                     Log.w(TAG, "createUserWithEmail:failure", task.getException());
@@ -103,7 +102,36 @@ public class userRegister extends AppCompatActivity {
                 }
         }
 
+    private void sendVerificationEmail()
+    {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
+        user.sendEmailVerification()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            // email sent
+                            // after email is sent just logout the user and finish this activity
+                            FirebaseAuth.getInstance().signOut();
+                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                        else
+                        {
+                            // email not sent, so display message and restart the activity or do whatever you wish to do
+
+                            //restart this activity
+                            overridePendingTransition(0, 0);
+                            finish();
+                            overridePendingTransition(0, 0);
+                            startActivity(getIntent());
+
+                        }
+                    }
+                });
+    }
 
 
     private void writeNewUser(String userId, FirebaseUser user) {
@@ -112,7 +140,7 @@ public class userRegister extends AppCompatActivity {
         View radioButton = group.findViewById(radioButtonID);
         int idx = group.indexOfChild(radioButton);
 
-        User newUser= new User(user.getEmail(),nombreRegistro.getText().toString(),idx,Integer.parseInt(nivelRegistro.getText().toString()));
+        User newUser= new User(user.getEmail(),nombreRegistro.getText().toString(),idx+1,Integer.parseInt(nivelRegistro.getText().toString()));
 
         mDatabase.child("users").child(userId).setValue(newUser);
 

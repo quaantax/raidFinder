@@ -1,11 +1,15 @@
 package com.example.jordi.raidfinder;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -13,6 +17,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,7 +46,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainMapActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MainMapActivity extends FragmentActivity implements OnMapReadyCallback, View.OnClickListener {
 
     private GoogleMap mMap;
     private String TAG;
@@ -55,8 +60,10 @@ public class MainMapActivity extends FragmentActivity implements OnMapReadyCallb
     private TextView userName;
     private TextView userNivel;
     private ImageView userTeam;
+    private ImageView botonProfile;
 
     private String gymId;
+    Location currentLocation;
 
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
@@ -73,36 +80,28 @@ public class MainMapActivity extends FragmentActivity implements OnMapReadyCallb
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_map);
-
+        checkGpsAvaiable();
         getLocationPermission();
         //se inicializa la instancia de Firebase
         mAuth = FirebaseAuth.getInstance();
-        initMap();
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        /*SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);*/
+        //initMap();
         listGym = new ArrayList<>();
         userName = findViewById(R.id.userName);
         userNivel = findViewById(R.id.userNivel);
         userTeam = findViewById(R.id.userTeam);
+        botonProfile=findViewById(R.id.botonProfile);
 
+        botonProfile.setOnClickListener(this);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-
-        //updateUI(currentUser);
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
-
             userId = user.getUid();
             getFirebaseUser();
-
-            // Check if user's email is verified
             boolean emailVerified = user.isEmailVerified();
         }
     }
@@ -120,9 +119,8 @@ public class MainMapActivity extends FragmentActivity implements OnMapReadyCallb
                 } else if (user.getEquipo()==2){
                     userTeam.setImageDrawable(getResources().getDrawable(R.drawable.team_mystic));
                 } else {
-                    userTeam.setImageDrawable(getResources().getDrawable(R.drawable.team_valor));
+                    userTeam.setImageDrawable(getResources().getDrawable(R.drawable.team_instinct));
                 }
-
                 // ...
             }
 
@@ -148,7 +146,7 @@ public class MainMapActivity extends FragmentActivity implements OnMapReadyCallb
                     public void onComplete(@NonNull Task task) {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "onComplete: Found location");
-                            Location currentLocation = (Location) task.getResult();
+                            currentLocation = (Location) task.getResult();
                             moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), DEFAULT_ZOOM);
                         } else {
                             Log.d(TAG, "Location not found");
@@ -215,11 +213,6 @@ public class MainMapActivity extends FragmentActivity implements OnMapReadyCallb
                             .icon(BitmapDescriptorFactory.fromBitmap(bMap)));
                     marker.setTag(gym);
                 }
-
-
-                //Set Custom InfoWindow Adapter
-                /*CustomInfoWindowAdapter adapter = new CustomInfoWindowAdapter(MainMapActivity.this);
-                mMap.setInfoWindowAdapter(adapter);*/
             }
 
 
@@ -227,44 +220,24 @@ public class MainMapActivity extends FragmentActivity implements OnMapReadyCallb
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String previousChildName) {
                 Log.d(TAG, "onChildChanged:" + dataSnapshot.getKey());
-
-                // A comment has changed, use the key to determine if we are displaying this
-                // comment and if so displayed the changed comment.
                Gym gym=dataSnapshot.getValue(Gym.class);
-
-
-                // ...
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
                 Log.d(TAG, "onChildRemoved:" + dataSnapshot.getKey());
-
-                // A comment has changed, use the key to determine if we are displaying this
-                // comment and if so remove it.
-                String commentKey = dataSnapshot.getKey();
-
                 // ...
             }
 
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String previousChildName) {
                 Log.d(TAG, "onChildMoved:" + dataSnapshot.getKey());
-
-                // A comment has changed position, use the key to determine if we are
-                // displaying this comment and if so move it.
-
-                String commentKey = dataSnapshot.getKey();
-
-                // ...
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.w(TAG, "postComments:onCancelled", databaseError.toException());
-                /*Toast.makeText(mContext, "Failed to load comments.",
-                        Toast.LENGTH_SHORT).show();*/
-            }
+                }
 
 
         };
@@ -272,48 +245,45 @@ public class MainMapActivity extends FragmentActivity implements OnMapReadyCallb
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                /*String gymName=marker.getTag();
-                String gymUrl=marker.getSnippet();*/
+                String gymName=String.valueOf(marker.getTag());
+                String gymUrl=marker.getSnippet();
 
                 Intent intent= new Intent(getApplicationContext(),gymActivity.class);
                 Gym gym=(Gym)marker.getTag();
                 intent.putExtra("gym",gym.objectToJson());
-                /*intent.putExtra("gymName",gymName);
+                intent.putExtra("gymName",gymName);
                 intent.putExtra("gymUrl",gymUrl);
-                intent.putExtra("gymId",gymId);*/
+                intent.putExtra("gymId",gymId);
                 startActivity(intent);
 
 
                 return true;
             }
         });
+    }//onMapReady
 
+    private void getLocationPermission(){
+    String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION};
 
-        }//onMapReady
-
-
-        private void getLocationPermission(){
-        String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION};
-
-            if(ContextCompat.checkSelfPermission(this.getApplicationContext()
-                    ,FINE_LOCATION)== PackageManager.PERMISSION_GRANTED){
-                if (ContextCompat.checkSelfPermission(this.getApplicationContext()
-                        ,COURSE_LOCATION)== PackageManager.PERMISSION_GRANTED){
-                        mLocationPermissionGranted = true;
-                        //initMap();
-                }else{
-                    ActivityCompat.requestPermissions(this,
-                            permissions,
-                            LOCATION_PERMISSION_REQUEST_CODE);
-                }
+        if(ContextCompat.checkSelfPermission(this.getApplicationContext()
+                ,FINE_LOCATION)== PackageManager.PERMISSION_GRANTED){
+            if (ContextCompat.checkSelfPermission(this.getApplicationContext()
+                    ,COURSE_LOCATION)== PackageManager.PERMISSION_GRANTED){
+                    mLocationPermissionGranted = true;
+                    //initMap();
             }else{
                 ActivityCompat.requestPermissions(this,
                         permissions,
                         LOCATION_PERMISSION_REQUEST_CODE);
             }
-
+        }else{
+            ActivityCompat.requestPermissions(this,
+                    permissions,
+                    LOCATION_PERMISSION_REQUEST_CODE);
         }
+
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -347,13 +317,11 @@ public class MainMapActivity extends FragmentActivity implements OnMapReadyCallb
     }
     @Override
     public void onBackPressed() {
-
-
+        //apretar 2 veces el botón de atrás para salir
         if (doubleBackToExitPressedOnce) {
             super.onBackPressed();
             return;
         }
-
         this.doubleBackToExitPressedOnce = true;
         Toast.makeText(this, "Presiona atrás otra vez para salir", Toast.LENGTH_LONG).show();
 
@@ -365,5 +333,41 @@ public class MainMapActivity extends FragmentActivity implements OnMapReadyCallb
             }
         }, 2000);
     }
-}
+    private void checkGpsAvaiable(){
+        final LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
 
+        if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("tu GPS está desactivado, ¿quieres activarlo?")
+                    .setCancelable(false)
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+
+                            Intent intent=new Intent(getApplicationContext(),MainActivity.class);
+                            startActivity(intent);
+                            startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                        }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                            dialog.cancel();
+                            Toast.makeText(MainMapActivity.this, "Esta app no funciona sin GPS", Toast.LENGTH_SHORT).show();
+                            finish();
+                        }
+                    });
+            final AlertDialog alert = builder.create();
+            alert.show();
+        } else {
+            initMap();
+        }
+
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (view.equals(botonProfile)){
+            Intent intent=new Intent(getApplicationContext(),UserProfileActivity.class);
+            startActivity(intent);
+        }
+    }
+}

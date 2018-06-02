@@ -2,6 +2,7 @@ package com.example.jordi.raidfinder;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -47,12 +48,14 @@ public class gymActivity extends AppCompatActivity implements View.OnClickListen
     Bundle bundle;
 
     Gym gym= new Gym();
-    Raid raid;
+    Raid raid=new Raid();
+
 
     //vars
-    int totalPlayers1=0;
-    int totalPlayers2=0;
-    int totalPlayers3=0;
+    int totalPlayers1;
+    int totalPlayers2;
+    int totalPlayers3;
+    String raidParticipante;
 
     public static final int CODE_RAID=42;
 
@@ -94,15 +97,12 @@ public class gymActivity extends AppCompatActivity implements View.OnClickListen
         pokemonRaid.setVisibility(View.INVISIBLE);
         raidParticipantesButton.setVisibility(View.INVISIBLE);
         raidChat.setVisibility(View.INVISIBLE);
-
-
+        raidParticipantesButton.setVisibility(View.INVISIBLE);
 
         Intent intent=getIntent();
         bundle =intent.getExtras();
 
         setGymData();
-
-
     }
     public void setGymData(){
         gym=gym.JsonToObject(bundle.getString("gym"));
@@ -110,14 +110,15 @@ public class gymActivity extends AppCompatActivity implements View.OnClickListen
         Picasso.get().load(gym.getUrl()).into(gymImage);
         gymNameText.setText(gym.getName());
 
-        raid=gym.getRaid();
+
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference().child("gym").child(gym.getGym_id());
 
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-
+                gym=snapshot.getValue(Gym.class);
+                raid=gym.getRaid();
                 if (snapshot.hasChild("raid")) {
                     final int id = getResources().getIdentifier("com.example.jordi.raidfinder:drawable/" + raid.getPokemon().toLowerCase(), null, null);
                     linearLayout2.setVisibility(View.VISIBLE);
@@ -131,12 +132,12 @@ public class gymActivity extends AppCompatActivity implements View.OnClickListen
                     pokemonRaidDefault.setVisibility(View.VISIBLE);
                     pokemonRaid.setVisibility(View.VISIBLE);
                     pokemonRaid.setText(raid.getPokemon());
-                    raidParticipantesButton.setVisibility(View.VISIBLE);
                     filterPlayersTeam();
 
                     if (raid.getParticipantes().contains(mAuth.getCurrentUser().getUid())){
                         incursionButton.setVisibility(View.INVISIBLE);
                         raidChat.setVisibility(View.VISIBLE);
+                        raidParticipantesButton.setVisibility(View.VISIBLE);
                     }
                 }
             }
@@ -148,41 +149,49 @@ public class gymActivity extends AppCompatActivity implements View.OnClickListen
         });
     }
     public void filterPlayersTeam() {
-        String raidParticipante;
         raid=gym.getRaid();
         mDatabase = FirebaseDatabase.getInstance().getReference();
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        for (int i = 0; i <raid.getParticipantes().size(); i++) {
-            raidParticipante = raid.getParticipantes().get(i);
-            mDatabase.child("users").child(raidParticipante).child("equipo").addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
 
-                    if (Integer.parseInt(String.valueOf(dataSnapshot.getValue()))==1){
-                        totalPlayers1++;
-                    }
-                    else if (Integer.parseInt(String.valueOf(dataSnapshot.getValue()))==2) {
-                        totalPlayers2++;
-                    }
-                    else if (Integer.parseInt(String.valueOf(dataSnapshot.getValue()))==3) {
-                        totalPlayers3++;
-                    }
-                    totalPlayersTeam1.setText(String.valueOf(totalPlayers1));
-                    totalPlayersTeam2.setText(String.valueOf(totalPlayers2));
-                    totalPlayersTeam3.setText(String.valueOf(totalPlayers3));
+        mDatabase.child("gym").child(gym.getGym_id()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                gym=dataSnapshot.getValue(Gym.class);
+                totalPlayers1=0;
+                totalPlayers2=0;
+                totalPlayers3=0;
+                for (int i = 0; i <raid.getParticipantes().size(); i++) {
+                    raidParticipante = raid.getParticipantes().get(i);
+                    mDatabase.child("users").child(raidParticipante).child("equipo").addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (Integer.parseInt(String.valueOf(dataSnapshot.getValue()))==1){
+                                totalPlayers1++;
+                            }
+                            else if (Integer.parseInt(String.valueOf(dataSnapshot.getValue()))==2) {
+                                totalPlayers2++;
+                            }
+                            else if (Integer.parseInt(String.valueOf(dataSnapshot.getValue()))==3) {
+                                totalPlayers3++;
+                            }
+                            totalPlayersTeam1.setText(String.valueOf(totalPlayers1));
+                            totalPlayersTeam2.setText(String.valueOf(totalPlayers2));
+                            totalPlayersTeam3.setText(String.valueOf(totalPlayers3));
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
                 }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-
-
+        });//Esto debería refrescar el gimnasio al entrar alguien en la raid
     }
-
 
     @Override
     public void onClick(View view) {
@@ -208,7 +217,6 @@ public class gymActivity extends AppCompatActivity implements View.OnClickListen
 
     }
     public void joinRaid(){
-        String raidParticipante;
         raid=gym.getRaid();
         raid.getParticipantes().add(mAuth.getCurrentUser().getUid());
 
@@ -219,26 +227,13 @@ public class gymActivity extends AppCompatActivity implements View.OnClickListen
         if (raid.getParticipantes().contains(mAuth.getCurrentUser().getUid())){
             Toast.makeText(this, "Ya estás inscrito", Toast.LENGTH_LONG).show();
             incursionButton.setVisibility(View.INVISIBLE);
-        } else {
+
             mDatabase = FirebaseDatabase.getInstance().getReference();
             raid=gym.getRaid();
 
             gym.setRaid(raid);
             mDatabase.child("gym").child(gym.getGym_id()).setValue(gym);
-
-            ValueEventListener postListener = new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    // Getting Post failed, log a message
-                }
-            };
-            ref.addValueEventListener(postListener);
         }
-
     }
 
     @Override
@@ -257,5 +252,6 @@ public class gymActivity extends AppCompatActivity implements View.OnClickListen
 
         mDatabase.child("gym").child(gym.getGym_id()).setValue(gym);
         Log.d("gymAct",gym.getGym_id());
+        setGymData();
     }
 }

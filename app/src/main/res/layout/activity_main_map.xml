@@ -7,6 +7,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <fragment
 
             android:id="@+id/map"
@@ -97,7 +98,23 @@
         app:layout_constraintStart_toStartOf="@+id/userDefaultNivel"
         app:layout_constraintTop_toBottomOf="@+id/userDefaultNivel" />
 
-</android.support.constraint.ConstraintLayout>
+        <ImageView
+            android:id="@+id/botonProfile"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:src="@drawable/screw"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.024"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:clickable="true" />
+
+    </android.support.constraint.ConstraintLayout>
 
 
 
