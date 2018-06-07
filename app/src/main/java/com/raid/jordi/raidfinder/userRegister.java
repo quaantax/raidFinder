@@ -75,6 +75,8 @@ public class userRegister extends AppCompatActivity {
             Toast.makeText(this, "El nivel introducido es incorrecto", Toast.LENGTH_LONG).show();
         } else if(Integer.parseInt(nivel)>40){
             Toast.makeText(this, "El nivel debe ser menor que 40", Toast.LENGTH_LONG).show();
+        } else if (Integer.parseInt(nivel)<1){
+            Toast.makeText(this, "El nivel tiene que ser mayor de 1", Toast.LENGTH_SHORT).show();
         }
             else {
                 mAuth.createUserWithEmailAndPassword(String.valueOf(correoRegistro.getText()), String.valueOf(passwordRegistro.getText()))

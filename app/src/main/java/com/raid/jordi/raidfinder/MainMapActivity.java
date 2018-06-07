@@ -72,8 +72,6 @@ public class MainMapActivity extends FragmentActivity implements OnMapReadyCallb
     private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
     private static final int DEFAULT_ZOOM = 16;
-
-
     //vars
     private Boolean mLocationPermissionGranted = false;
     private FusedLocationProviderClient mFusedLocationClient;

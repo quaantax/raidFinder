@@ -40,6 +40,7 @@ public class ParticipantesIncursionActivity extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance().getReference();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         final List<User> participantes=new ArrayList<User>();
+
         //participantes.removeAll(participantes);
         for (int i = 0; i <raid.getParticipantes().size(); i++){
             //User user= new User();

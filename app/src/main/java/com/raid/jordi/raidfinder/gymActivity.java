@@ -47,8 +47,8 @@ public class gymActivity extends AppCompatActivity implements View.OnClickListen
     //import from intent
     Bundle bundle;
 
-    Gym gym= new Gym();
-    Raid raid=new Raid();
+    Gym gym =new Gym();
+    Raid raid=gym.getRaid();
 
 
     //vars
@@ -106,17 +106,15 @@ public class gymActivity extends AppCompatActivity implements View.OnClickListen
     }
     public void setGymData(){
         gym=gym.JsonToObject(bundle.getString("gym"));
-
         Picasso.get().load(gym.getUrl()).into(gymImage);
         gymNameText.setText(gym.getName());
 
-
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference().child("gym").child(gym.getGym_id());
-
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
+
                 gym=snapshot.getValue(Gym.class);
                 raid=gym.getRaid();
                 if (snapshot.hasChild("raid")) {
@@ -153,18 +151,22 @@ public class gymActivity extends AppCompatActivity implements View.OnClickListen
         mDatabase = FirebaseDatabase.getInstance().getReference();
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
 
+
         mDatabase.child("gym").child(gym.getGym_id()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 gym=dataSnapshot.getValue(Gym.class);
+
                 totalPlayers1=0;
                 totalPlayers2=0;
                 totalPlayers3=0;
                 for (int i = 0; i <raid.getParticipantes().size(); i++) {
                     raidParticipante = raid.getParticipantes().get(i);
                     mDatabase.child("users").child(raidParticipante).child("equipo").addListenerForSingleValueEvent(new ValueEventListener() {
+
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
+
                             if (Integer.parseInt(String.valueOf(dataSnapshot.getValue()))==1){
                                 totalPlayers1++;
                             }
@@ -195,7 +197,6 @@ public class gymActivity extends AppCompatActivity implements View.OnClickListen
 
     @Override
     public void onClick(View view) {
-        raid=gym.getRaid();
         if (view.equals(crearIncursion)){
             Intent intent=new Intent(this,raidDataActivity.class);
             startActivityForResult(intent,CODE_RAID);
@@ -214,10 +215,8 @@ public class gymActivity extends AppCompatActivity implements View.OnClickListen
             intent.putExtra("gymid",gym.getGym_id());
             startActivity(intent);
         }
-
     }
     public void joinRaid(){
-        raid=gym.getRaid();
         raid.getParticipantes().add(mAuth.getCurrentUser().getUid());
 
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -229,12 +228,10 @@ public class gymActivity extends AppCompatActivity implements View.OnClickListen
             incursionButton.setVisibility(View.INVISIBLE);
 
             mDatabase = FirebaseDatabase.getInstance().getReference();
-            raid=gym.getRaid();
-
             gym.setRaid(raid);
-            mDatabase.child("gym").child(gym.getGym_id()).setValue(gym);
+            mDatabase.child("gym").child(gym.getGym_id()).child("raid").setValue(raid);
+            setGymData();
         }
-        setGymData();
     }
 
     @Override

@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Boolean saveLogin;
     private ProgressBar spinner;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
             final String email = String.valueOf(emailLogin.getText());
             final String password = String.valueOf(passwordLogin.getText());
+
             if (email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(MainActivity.this, "El email o la contraseña son incorrectos",
                         Toast.LENGTH_LONG).show();

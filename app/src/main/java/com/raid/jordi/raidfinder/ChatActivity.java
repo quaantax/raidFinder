@@ -63,14 +63,16 @@ public class ChatActivity extends AppCompatActivity{
           protected void populateView(View v, ChatMessage model, int position) {
               // Get references to the views of message.xml
               TextView messageText = v.findViewById(R.id.message_text);
-              TextView messageUser = v.findViewById(R.id.message_user);
+              final TextView messageUser = v.findViewById(R.id.message_user);
               TextView messageTime = v.findViewById(R.id.message_time);
 
 
               mDatabase.child("users").child(model.getMessageUser()).addListenerForSingleValueEvent(new ValueEventListener() {
                   @Override
                   public void onDataChange(DataSnapshot dataSnapshot) {
+                      user=new User();
                       user=dataSnapshot.getValue(User.class);
+                      messageUser.setText(user.getNombre());
                   }
 
                   @Override
@@ -79,12 +81,8 @@ public class ChatActivity extends AppCompatActivity{
                   }
               });
 
-
-
-
-
               messageText.setText(model.getMessageText());
-              messageUser.setText(user.getNombre());
+
 
               // Format the date before showing it
               messageTime.setText(DateFormat.format("dd-MM-yyyy (HH:mm:ss)",
