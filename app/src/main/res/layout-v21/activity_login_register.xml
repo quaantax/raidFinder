@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.jordi.raidfinder.userRegister"
+    tools:context="com.raid.jordi.raidfinder.userRegister"
     android:background="@color/background">
 
     <View
@@ -180,7 +180,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
-        android:background="@drawable/layer_list_profile"
+        android:background="@drawable/layer_list_profile_register"
         app:layout_constraintBottom_toTopOf="@+id/correoRegistro"
         app:layout_constraintEnd_toEndOf="@+id/view5"
         app:layout_constraintStart_toStartOf="@+id/view5"

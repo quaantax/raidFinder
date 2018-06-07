@@ -4,7 +4,7 @@
 
     To get one, follow this link, follow the directions and press "Create" at the end:
 
-    https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend&keyType=CLIENT_SIDE_ANDROID&r=B3:78:AB:A3:8B:05:29:F5:8B:C1:F0:F4:31:65:1A:3F:BF:5D:8D:C2%3Bcom.example.jordi.raidfinder
+    https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend&keyType=CLIENT_SIDE_ANDROID&r=B3:78:AB:A3:8B:05:29:F5:8B:C1:F0:F4:31:65:1A:3F:BF:5D:8D:C2%3Bcom.raid.jordi.raidfinder
 
     You can also add your credentials to an existing key, using these values:
 

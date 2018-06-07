@@ -93,7 +93,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.08"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/userProfileLevel" />
+        app:layout_constraintTop_toBottomOf="@+id/userProfileLevel"
+        android:clickable="true"/>
 
     <TextView
         android:id="@+id/cambiarEmail"
@@ -101,11 +102,11 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="20dp"
+        android:clickable="true"
         android:text="¿Quieres cambiar el email? pulsa aqui"
         android:textColor="@color/editTextBackground"
         app:layout_constraintEnd_toEndOf="@+id/cambiarPassword"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.071"
         app:layout_constraintStart_toStartOf="@+id/cambiarPassword"
         app:layout_constraintTop_toBottomOf="@+id/cambiarPassword" />
 
@@ -149,6 +150,21 @@
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="@+id/view7"
         app:layout_constraintStart_toStartOf="@+id/view7"
-        app:layout_constraintTop_toBottomOf="@+id/view7" />"/>
+        app:layout_constraintTop_toBottomOf="@+id/view7" />
+
+    <TextView
+        android:id="@+id/e"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="Ve un anuncio para apoyar a la app :)"
+        android:textColor="#89b6ff"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="@+id/cambiarEmail"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/cambiarEmail"
+        app:layout_constraintTop_toBottomOf="@+id/cambiarEmail"
+        android:clickable="true"/>"/>
 
 </android.support.constraint.ConstraintLayout>

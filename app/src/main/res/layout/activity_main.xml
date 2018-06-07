@@ -5,7 +5,7 @@
     android:id="@+id/backg"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.jordi.raidfinder.MainActivity"
+    tools:context="com.raid.jordi.raidfinder.MainActivity"
     android:background="@color/background">
 
     <RelativeLayout
@@ -18,14 +18,13 @@
             android:id="@+id/logo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginTop="55dp"
-            app:srcCompat="@drawable/logo" />
+            android:layout_marginTop="45dp"
+            app:srcCompat="@drawable/unknown" />
     </RelativeLayout>
 
     <EditText
+        android:theme="@style/EditTextHint"
         android:id="@+id/emailLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -34,7 +33,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="20dp"
         android:ems="10"
-        android:hint="Usuario"
+        android:hint="Email"
         android:inputType="textEmailAddress"
         android:textColor="@color/editTextBackground"
         app:layout_constraintEnd_toEndOf="parent"
@@ -43,18 +42,18 @@
         app:layout_constraintTop_toBottomOf="@+id/background" />
 
     <EditText
+        android:theme="@style/EditTextHint"
         android:id="@+id/passwordLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:ems="10"
-        android:hint="Password"
+        android:hint="Contraseña"
         android:inputType="textPassword"
-        android:text="tameformacion"
+        android:textColor="@color/editTextBackground"
         app:layout_constraintEnd_toEndOf="@+id/emailLogin"
         app:layout_constraintStart_toStartOf="@+id/emailLogin"
-        app:layout_constraintTop_toBottomOf="@+id/emailLogin"
-        android:textColor="@color/editTextBackground"/>
+        app:layout_constraintTop_toBottomOf="@+id/emailLogin" />
 
     <Button
         android:id="@+id/loginBoton"
@@ -99,4 +98,22 @@
         app:layout_constraintStart_toStartOf="@+id/passwordLogin"
         app:layout_constraintTop_toBottomOf="@+id/passwordLogin"
         android:textColor="#ffffff"/>
+
+    <ProgressBar
+        android:id="@+id/progressBar1"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/background"
+        app:layout_constraintVertical_bias="0.57" />
 </android.support.constraint.ConstraintLayout>

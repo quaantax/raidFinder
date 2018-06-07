@@ -5,7 +5,7 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.jordi.raidfinder.ChatActivity"
+    tools:context="com.raid.jordi.raidfinder.ChatActivity"
     android:background="@color/background">
 
     <android.support.design.widget.FloatingActionButton
@@ -48,5 +48,8 @@
         android:dividerHeight="16dp"
         android:divider="@android:color/transparent"
         android:id="@+id/list_of_messages"
-        android:layout_marginBottom="16dp"/>
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"/>
 </RelativeLayout>
